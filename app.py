@@ -9,6 +9,18 @@ from flask import Flask, request, send_file, jsonify
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from web_file_convertor import DocumentConverter, HAS_PDFIUM, pdfium
+import traceback
+import sys
+
+@app.route('/convert', methods=['POST'])
+def convert():
+    try:
+        # Aapka existing conversion logic yahan hai
+        ...
+    except Exception as e:
+        print("CRITICAL ERROR IN CONVERT ROUTE:", file=sys.stderr)
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
 
 # pdf2image fallback import check
 try:
