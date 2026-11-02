@@ -61,7 +61,7 @@ def check_and_update_quota(ip, requested_pages=1, limit=5):
 
 @app.route("/", methods=["GET"])
 def health_check():
-    return jsonify({"status": "online", "service": "Smart Document Converter API"})
+    return jsonify({"status": "online", "service": "Smart Document  API"})
 
 @app.route("/convert", methods=["POST"])
 def convert():
@@ -92,6 +92,8 @@ def convert():
         file.save(str(input_path))
 
         converter = DocumentConverter(api_key=api_key)
+        except TypeError:
+        converter = DocumentConverter()
 
         if output_format == "excel":
             out_path = converter.convert_to_excel(str(input_path), page_selection=page_selection)
