@@ -259,7 +259,7 @@ class DocumentConverter:
         self.suite_dir.mkdir(parents=True, exist_ok=True)
         self.config_path = self.suite_dir / "config.json"
 
-        self._active_model = "gemini-2.5-flash"
+        self._active_model = "gemini-3.5-flash"
         self._ensure_config()
 
     def _ensure_config(self):
@@ -385,7 +385,7 @@ class DocumentConverter:
             temperature=0.1
         )
 
-        models_to_try = [self._active_model, "gemini-2.5-flash", "gemini-flash-latest"]
+        models_to_try = [self._active_model, "gemini-3.5-flash", "gemini-flash-latest"]
         last_err = None
         for model_name in models_to_try:
             try:
