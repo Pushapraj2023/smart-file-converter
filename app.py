@@ -91,9 +91,7 @@ def convert():
         input_path = TEMP_DIR / filename
         file.save(str(input_path))
 
-        converter = DocumentConverter(api_key=api_key)
-        except TypeError:
-        converter = DocumentConverter()
+           converter = DocumentConverter()
 
         if output_format == "excel":
             out_path = converter.convert_to_excel(str(input_path), page_selection=page_selection)
