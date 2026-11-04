@@ -93,11 +93,26 @@ def convert():
 
         converter = DocumentConverter()
 
+        base_name = Path(filename).stem
         if output_format == "excel":
-            out_path = converter.convert_to_excel(str(input_path), page_selection=page_selection)
+            dest_filename = f"{base_name}_converted.xlsx"
+            dest_path = str(TEMP_DIR / dest_filename)
+            try:
+                out_path = converter.convert_to_excel(str(input_path), dest_path=dest_path, page_selection=page_selection)
+            except TypeError:
+                out_path = converter.convert_to_excel(str(input_path), dest_path)
+            if not out_path:
+                out_path = dest_path
             mimetype = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         else:
-            out_path = converter.convert_to_word(str(input_path), page_selection=page_selection)
+            dest_filename = f"{base_name}_converted.docx"
+            dest_path = str(TEMP_DIR / dest_filename)
+            try:
+                out_path = converter.convert_to_word(str(input_path), dest_path=dest_path, page_selection=page_selection)
+            except TypeError:
+                out_path = converter.convert_to_word(str(input_path), dest_path)
+            if not out_path:
+                out_path = dest_path
             mimetype = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 
         return send_file(
