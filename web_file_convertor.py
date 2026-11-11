@@ -424,7 +424,7 @@ class DocumentConverter:
                 _preserve_run_space(run)
             elif token_type == "SPACE":
                 run.text = val
-                _set_run_font_properties(run, "Arial", 13)
+                _set_run_font_properties(run, "DevLys 010", 15)
                 _preserve_run_space(run)
 
     def convert_to_word(self, source_path: str, dest_path: str, page_selection: str = "all", progress_cb=None):
