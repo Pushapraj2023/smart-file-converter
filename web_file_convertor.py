@@ -382,7 +382,7 @@ class DocumentConverter:
 
         call_config = types.GenerateContentConfig(
             automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
-            temperature=0.1
+            temperature=0.0
         )
 
         models_to_try = [self._active_model, "gemini-3.5-flash", "gemini-flash-latest"]
@@ -417,9 +417,11 @@ class DocumentConverter:
             if token_type == "HINDI":
                 run.text = unicode_to_devlys010(val)
                 _set_run_font_properties(run, "DevLys 010", 15)
+                _preserve_run_space(run)
             elif token_type in ("ARIAL", "SYMBOL"):
                 run.text = val
                 _set_run_font_properties(run, "Arial", 13)
+                _preserve_run_space(run)
             elif token_type == "SPACE":
                 run.text = val
                 _set_run_font_properties(run, "Arial", 13)
@@ -443,12 +445,12 @@ class DocumentConverter:
 
         prompt_word = (
             "Transcribe this official document page exactly as printed with 100% precision. "
-            "Preserve all exact words, numbers, arithmetic signs, and exact spaces between words. "
+            "CRITICAL: Keep all exact spaces between words. Do NOT merge, collapse, or remove spaces. "
+            "Preserve all exact words, numbers, punctuation, and layout. "
             "Output titles and text lines normally. "
             "If there is a table, output it strictly as a Markdown table (| Col1 | Col2 |). "
             "Do NOT use HTML tags like <br>. Do NOT add bold asterisks (**). Output ONLY document text."
         )
-
         for i, img in enumerate(images, 1):
             if progress_cb:
                 progress_cb(i, total_pages, f"Reading page {i} of {total_pages}...")
