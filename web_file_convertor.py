@@ -385,7 +385,7 @@ class DocumentConverter:
             temperature=0.0
         )
 
-        models_to_try = [self._active_model, "gemini-3.5-flash", "gemini-flash-latest"]
+        models_to_try = [self._active_model, "gemini-3.5-flash", "gemini-2.5-flash", "gemini-1.5-flash"]
         last_err = None
         for model_name in models_to_try:
             try:
