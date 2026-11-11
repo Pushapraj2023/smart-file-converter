@@ -204,25 +204,22 @@ def unicode_to_devlys010(text: str) -> str:
 def tokenize_content(text: str):
     """
     STRICT UNIVERSAL TOKENIZER:
-    1. Hindi Devanagari text -> DevLys 010 (15 pt)
+    1. - Hindi text along with natural internal spaces -> Single DevLys run
     2. English words and Digits -> Arial (13 pt)
     3. Symbols, Math signs (+, -, *, /, =, %, ., ,, :) -> Arial (13 pt)
     4. Spaces -> Preserved Space
     """
     if not text:
         return []
-    pattern = re.compile(r'([\u0900-\u097F]+)|([A-Za-z0-9]+)|([^\s\w\u0900-\u097F]+)|(\s+)')
+    # Hindi letters + internal whitespace ko ek saath capture karein
+    pattern = re.compile(r'([\u0900-\u097F\s]+)|([A-Za-z0-9\.\,\:\-\/\%\+\*]+)')
     tokens = []
     for match in pattern.finditer(text):
-        hindi, eng_num, symbol, space = match.groups()
-        if hindi:
-            tokens.append(("HINDI", hindi))
-        elif eng_num:
-            tokens.append(("ARIAL", eng_num))
-        elif symbol:
-            tokens.append(("SYMBOL", symbol))
-        elif space:
-            tokens.append(("SPACE", space))
+        hindi_part, eng_part = match.groups()
+        if hindi_part:
+            tokens.append(("HINDI", hindi_part))
+        elif eng_part:
+            tokens.append(("ARIAL", eng_part))
     return tokens
 
 
@@ -415,16 +412,13 @@ class DocumentConverter:
             run = paragraph.add_run()
 
             if token_type == "HINDI":
+                # unicode_to_devlys010 ab spaces ko andar hi preserve rakhega
                 run.text = unicode_to_devlys010(val)
                 _set_run_font_properties(run, "DevLys 010", 15)
                 _preserve_run_space(run)
-            elif token_type in ("ARIAL", "SYMBOL"):
+            else:
                 run.text = val
                 _set_run_font_properties(run, "Arial", 13)
-                _preserve_run_space(run)
-            elif token_type == "SPACE":
-                run.text = val
-                _set_run_font_properties(run, "DevLys 010", 15)
                 _preserve_run_space(run)
 
     def convert_to_word(self, source_path: str, dest_path: str, page_selection: str = "all", progress_cb=None):
